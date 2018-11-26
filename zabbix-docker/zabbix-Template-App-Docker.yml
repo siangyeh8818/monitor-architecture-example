@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+    zabbix-templates:
+       image: monitoringartist/zabbix-templates
+       container_name: zabbix-templates
+       network_mode: host
+       privileged: true
+       environment:
+         - XXL_apiurl=http://172.16.106.130:8080/zabbix
+         - XXL_apiuser=Admin
+         - XXL_apipass=zabbix
+       volumes:
+         - /etc/localtime:/etc/localtime

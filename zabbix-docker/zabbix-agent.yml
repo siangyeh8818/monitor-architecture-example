@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+    zabbix-agent:
+       image: sinagyeh8818/zabbix-agent:v3
+#       image: zabbix/zabbix-agent
+       container_name: zabbix-agent
+       network_mode: host
+       privileged: true
+       environment:
+         - ZBX_HOSTNAME=k8s1
+         - ZBX_SERVER_HOST=172.16.106.130
+       volumes:
+         - /etc/localtime:/etc/localtime
+         - /dev/sdc:/dev/sdc

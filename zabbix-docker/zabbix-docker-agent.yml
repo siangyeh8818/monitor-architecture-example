@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+    dockbix-agent:
+       image: monitoringartist/dockbix-agent-xxl-limited
+       container_name: dockbix-agent-xx1
+       network_mode: host
+       restart: unless-stopped
+       privileged: true
+       environment:
+         - ZA_Server=127.0.0.1/0
+         - ZA_ServerActive=127.0.0.1
+       volumes:
+         - /etc/localtime:/etc/localtime
+         - /:/rootfs
+         - /var/run:/var/run

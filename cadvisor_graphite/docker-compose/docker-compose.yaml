@@ -1,0 +1,67 @@
+version: '2.1'
+services:
+    cadvisor:
+#      image: google/cadvisor:v0.30.0
+      image: docker-reg.emotibot.com.cn:55688/cadvisor:0.30.2-20180827-fb67a13
+      container_name: cadvisor
+      ports:
+        - "8100:8080"
+      restart: always
+      environment:
+        - STATSD_HOST=172.17.0.1
+        - STATSD_PORT=8125
+      logging:
+        options:
+          max-size: "5M"
+          max-file: "10"
+        driver: json-file
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:rw
+        - /sys:/sys:ro
+#        - /sys/fs/cgroup/cpu,cpuacct:/sys/fs/cgroup/cpuacct,cpu:rw
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+        - /etc/hostname:/etc/hostname
+    graphite-statsd:
+      image: docker-reg.emotibot.com.cn:55688/graphite-statsd:20180827-96a8070
+      container_name: graphite-statsd
+      ports:
+        - 8001:8001
+        - 2003-2004:2003-2004
+        - 2023-2024:2023-2024
+        - 8125:8125/udp
+        - 8126:8126
+      restart: always
+      logging:
+        options:
+          max-size: "5M"
+          max-file: "10"
+        driver: json-file
+      volumes:
+        - graphite:/var/lib/graphite
+        - /etc/localtime:/etc/localtime
+
+    grafana:
+#      image: grafana:v1
+      image: docker-reg.emotibot.com.cn:55688/grafana:5.2.0-20180827-cf5908c
+      container_name: grafana
+      privileged: true
+      ports:
+        - 3001:3001
+      restart: always
+      logging:
+        options:
+          max-size: "5M"
+          max-file: "10"
+        driver: json-file
+      environment:
+        - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      volumes:
+        - grafana-storage:/var/lib/grafana
+        - /etc/localtime:/etc/localtime
+        - ./grafana.ini:/etc/grafana/grafana.ini
+
+volumes:
+  graphite:
+  grafana-storage:
