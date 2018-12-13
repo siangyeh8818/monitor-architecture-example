@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: pentium-dashboard-ingress
+ namespace: kube-system
+ annotations:
+   nginx.ingress.kubernetes.io/rewrite-target: /
+   nginx.ingress.kubernetes.io/secure-backends: "true"
+   nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+ tls:
+ - hosts:
+   - siang-portal.pentium.network
+   secretName: pentium-tls
+ rules:
+ - host: siang-portal.pentium.network
+   http:
+     paths:
+     - backend:
+         serviceName: kubernetes-dashboard
+         servicePort: 443
+       path : /dashboard
