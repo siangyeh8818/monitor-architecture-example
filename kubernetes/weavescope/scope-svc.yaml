@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: weave-scope
+  name: weave-scope-app
+  namespace: weave
+spec:
+  ports:
+    - port: 80
+      nodePort: 30001
+      targetPort: 4040
+  selector:
+    app: kubernetes-dashboard
+  type: NodePort
