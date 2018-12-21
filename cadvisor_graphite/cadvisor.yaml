@@ -1,0 +1,25 @@
+version: '2.1'
+services:
+    cadvisor:
+      image: google/cadvisor:v0.30.0
+#      image: docker-reg.emotibot.com.cn:55688/cadvisor:0.30.2-20180827-fb67a13
+      container_name: cadvisor
+      ports:
+        - "8100:8080"
+      restart: always
+      environment:
+        - STATSD_HOST=172.17.0.1
+        - STATSD_PORT=8125
+      logging:
+        options:
+          max-size: "5M"
+          max-file: "10"
+        driver: json-file
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:rw
+#        - /sys:/sys:ro
+        - /sys/fs/cgroup/cpu,cpuacct:/sys/fs/cgroup/cpuacct,cpu:rw
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+        - /etc/hostname:/etc/hostname

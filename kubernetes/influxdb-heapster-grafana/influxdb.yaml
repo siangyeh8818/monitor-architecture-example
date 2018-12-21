@@ -17,9 +17,13 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
+#      volumes:
+#      - name: influxdb-storage
+#        emptyDir: {}
       volumes:
       - name: influxdb-storage
-        emptyDir: {}
+        hostPath:
+          path: /opt/influxdb/data
 ---
 apiVersion: v1
 kind: Service
