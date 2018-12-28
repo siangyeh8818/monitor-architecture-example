@@ -1,0 +1,48 @@
+---
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: node-exporter
+  namespace: kube-system
+spec:
+  serviceName: node-exporter-svc
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - node-exporter
+              topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 300
+      containers:
+      - image: prom/node-exporter
+        name: node-exporter
+        ports:
+        - containerPort: 9100
+          protocol: TCP
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter-svc
+  namespace: kube-system
+  labels:
+    app: node-exporter
+spec:
+  ports:
+  - port: 9100
+    name: server
+  clusterIP: None
+  selector:
+    app: node-exporter
+---

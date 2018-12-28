@@ -29,7 +29,7 @@ data:
       - job_name: 'docker-daemon'
         scrape_interval: 5s
         static_configs:
-          - targets: ['192.168.89.169:9999']
+          - targets: ['10.22.14.10:9999','10.22.14.11:9999','10.22.14.12:9999','10.22.15.10:9999','10.22.15.11:9999','10.22.15.12:9999']
     alerting:
       alertmanagers:
       - static_configs:
