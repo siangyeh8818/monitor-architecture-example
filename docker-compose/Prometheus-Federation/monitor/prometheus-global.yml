@@ -10,8 +10,11 @@ scrape_configs:
     metrics_path: '/federate'
     params:
       'match[]':
-        - '{job=~"node-exporter-*"}'
-        - '{job="gateway.openfaas"}'
+        - '{job="node-exporter-work1"}'
+        - '{job="node-exporter-work2"}'
+        - '{job="node-exporter-work3"}'
+        - '{job="node-exporter-work4"}'
+        - '{job="gateway"}'
         - '{job="docker-daemon"}'
     static_configs:
       - targets:
