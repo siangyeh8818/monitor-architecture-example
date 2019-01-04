@@ -1,0 +1,39 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-dockerdaemon
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-dockerdaemon
+    spec:
+      containers:
+      - name: prometheus-dockerdaemon
+        image: prom/prometheus:v2.3.1
+        command:
+          - "prometheus"
+          - "--config.file=/etc/prometheus/prometheus.yml"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        resources:
+          requests:
+            memory: 512Mi
+          limits:
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: prometheus-config
+          subPath: prometheus.yml
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+            items:
+              - key: prometheus.yml
+                path: prometheus.yml
+                mode: 0644

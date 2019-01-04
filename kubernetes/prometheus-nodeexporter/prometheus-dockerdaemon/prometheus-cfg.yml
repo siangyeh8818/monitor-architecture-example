@@ -1,0 +1,22 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus-config
+  namespace: kube-system
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval:     15s
+      evaluation_interval: 15s
+      external_labels:
+          monitor: 'faas-monitor'
+    rule_files:
+        - 'alert.rules.yml'
+    scrape_configs:
+      - job_name: 'docker-daemon'
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['10.22.14.10:9999','10.22.14.11:9999','10.22.14.12:9999','10.22.15.10:9999','10.22.15.11:9999','10.22.15.12:9999']
+---

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-dockerdaemon
+  namespace: kube-system
+  labels:
+    app: prometheus-dockerdaemon
+spec:
+  type: NodePort
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: 9090
+      nodePort: 31122
+  selector:
+    app: prometheus-dockerdaemon
