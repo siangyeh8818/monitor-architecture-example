@@ -18,7 +18,7 @@ services:
      - "9100:9100"
     network_mode: host
   grafana:
-    image: siangyeh8818/grafana-openfaas:4.3.3
+    image: siangyeh8818/grafana-openfaas:4.3.2
     ports:
      - "3000:3000"
     depends_on:
