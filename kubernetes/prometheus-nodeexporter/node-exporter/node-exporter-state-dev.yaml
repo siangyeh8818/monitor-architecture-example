@@ -6,7 +6,7 @@ metadata:
   namespace: kube-system
 spec:
   serviceName: node-exporter-svc
-  replicas: 4
+  replicas: 6
   template:
     metadata:
       labels:
@@ -30,6 +30,8 @@ spec:
         - containerPort: 9100
           protocol: TCP
           name: http
+      tolerations:
+      - operator: "Exists"
 ---
 apiVersion: v1
 kind: Service
