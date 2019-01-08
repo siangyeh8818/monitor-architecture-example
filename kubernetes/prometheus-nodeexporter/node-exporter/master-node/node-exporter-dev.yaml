@@ -1,0 +1,26 @@
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: node-exporter-master
+  namespace: kube-system
+  labels:
+    k8s-app: node-exporter-master
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: node-exporter-master
+    spec:
+      containers:
+      - image: prom/node-exporter
+        name: node-exporter-master
+        ports:
+        - containerPort: 9100
+          protocol: TCP
+          name: http
+      tolerations:
+      - key: "exporter"
+        operator: "Equal"
+        value: "master"
+        effect: "NoSchedule"
