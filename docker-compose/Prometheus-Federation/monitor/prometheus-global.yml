@@ -10,6 +10,8 @@ scrape_configs:
     metrics_path: '/federate'
     params:
       'match[]':
+        - '{job="node-exporter-master1"}'
+        - '{job="node-exporter-master2"}'
         - '{job="node-exporter-work1"}'
         - '{job="node-exporter-work2"}'
         - '{job="node-exporter-work3"}'

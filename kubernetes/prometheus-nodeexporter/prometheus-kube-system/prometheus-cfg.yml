@@ -15,31 +15,45 @@ data:
     rule_files:
         - 'alert.rules.yml'
     scrape_configs:
-      - job_name: "node-exporter-work1"
+      - job_name: "node-exporter-master1"
         scrape_interval: 5s
         dns_sd_configs:
           - names: ['node-exporter-0.node-exporter-svc.kube-system']
             port: 9100
             type: A
-            refresh_interval: 5s
-      - job_name: "node-exporter-work2"
+            refresh_interval: 10s
+      - job_name: "node-exporter-master2"
         scrape_interval: 5s
         dns_sd_configs:
           - names: ['node-exporter-1.node-exporter-svc.kube-system']
             port: 9100
             type: A
-            refresh_interval: 5s
-      - job_name: "node-exporter-work3"
+            refresh_interval: 10s
+      - job_name: "node-exporter-work1"
         scrape_interval: 5s
         dns_sd_configs:
           - names: ['node-exporter-2.node-exporter-svc.kube-system']
             port: 9100
             type: A
-            refresh_interval: 5s
-      - job_name: "node-exporter-work4"
+            refresh_interval: 10s
+      - job_name: "node-exporter-work2"
         scrape_interval: 5s
         dns_sd_configs:
           - names: ['node-exporter-3.node-exporter-svc.kube-system']
             port: 9100
             type: A
-            refresh_interval: 5s
+            refresh_interval: 10s
+      - job_name: "node-exporter-work3"
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['node-exporter-4.node-exporter-svc.kube-system']
+            port: 9100
+            type: A
+            refresh_interval: 10s
+      - job_name: "node-exporter-work4"
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['node-exporter-5.node-exporter-svc.kube-system']
+            port: 9100
+            type: A
+            refresh_interval: 10s
