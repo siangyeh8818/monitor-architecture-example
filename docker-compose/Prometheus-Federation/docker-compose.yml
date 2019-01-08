@@ -7,6 +7,9 @@ services:
     command: "--config.file=/etc/prometheus/prometheus-global.yml --storage.tsdb.path=/prometheus"
     ports:
      - 9090:9090
+    volumes:
+     - /etc/localtime:/etc/localtime
+     - /opt/prometheus-global:/prometheus
 #    depends_on:
 #     - exporter
 #  exporter:
@@ -15,7 +18,8 @@ services:
 #     - "9100:9100"
 #    network_mode: host
   grafana:
-    image: siangyeh8818/grafana-openfaas:4.3.1
+    image: siang/grafana:test-4
+#    image: siangyeh8818/grafana-openfaas:4.3.1
     ports:
      - "3000:3000"
     depends_on:
