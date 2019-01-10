@@ -12,6 +12,9 @@ services:
      - 9090:9090
     depends_on:
      - exporter
+     - nginx
+    volumes:
+    - /etc/localtime:/etc/localtime
   exporter:
     image: prom/node-exporter:latest
     ports:
@@ -23,5 +26,28 @@ services:
      - "3000:3000"
     depends_on:
       - prom
+      - nginx
     env_file:
     - ./grafana.env
+    volumes:
+    - /etc/localtime:/etc/localtime
+#  alertmanager:
+#    image: prom/alertmanager
+#    volumes:
+#      - ./monitor/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+#    depends_on:
+#      - configuration_manager
+#    command:
+#      - -config.file=/etc/alertmanager/alertmanager.yml
+  nginx:
+     image: siangyeh8818/nginx:multi-tcp-1.5
+     restart: always
+     ports:
+       - "31122:31122"
+       - "31119:31119"
+       - "31121:31121"
+     privileged: true
+     env_file:
+     - ./nginx.env
+     volumes:
+     - /etc/localtime:/etc/localtime
