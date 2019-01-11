@@ -20,9 +20,15 @@ scrape_configs:
         - '{job="docker-daemon"}'
     static_configs:
       - targets:
-        - '10.22.14.11:31121'
-        - '10.22.15.11:31119'
+        - '172.17.0.1:31121'
+        - '172.17.0.1:31119'
   - job_name: 'data-log-host'
     scrape_interval: 5s
     static_configs:
       - targets: ['10.22.14.13:9100','10.22.15.13:9100']
+  - job_name: cadvisor
+    scrape_interval: 5s
+    static_configs:
+    - targets:
+      - cadvisor:8080
+

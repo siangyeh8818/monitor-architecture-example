@@ -4,7 +4,7 @@ services:
     image: siangyeh8818/prometheus-docker:2.6
 #    image: quay.io/prometheus/prometheus:v2.0.0
     volumes:
-     - ./monitor/prometheus-global.yml:/prometheus/prometheus.yml
+     - ./monitor/prometheus.yml:/prometheus/prometheus.yml
      - /etc/localtime:/etc/localtime
      - /opt/prometheus-global:/opt/prometheus
     privileged: true
@@ -13,8 +13,12 @@ services:
     depends_on:
      - exporter
      - nginx
-    volumes:
-    - /etc/localtime:/etc/localtime
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 190M
+    restart: always
   exporter:
     image: prom/node-exporter:latest
     ports:
@@ -40,7 +44,8 @@ services:
 #    command:
 #      - -config.file=/etc/alertmanager/alertmanager.yml
   nginx:
-     image: siangyeh8818/nginx:multi-tcp-1.5
+#     image: nginx:test-1
+     image: siangyeh8818/nginx:influx-prom
      restart: always
      ports:
        - "31122:31122"
@@ -51,3 +56,22 @@ services:
      - ./nginx.env
      volumes:
      - /etc/localtime:/etc/localtime
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+    - 6379:6379
+
+
