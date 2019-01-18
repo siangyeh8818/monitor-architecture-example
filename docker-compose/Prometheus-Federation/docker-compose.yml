@@ -1,7 +1,7 @@
 version: "3"
 services:
   prom:
-    image: siangyeh8818/prometheus-docker:2.6
+    image: siangyeh8818/prometheus-docker:2.6-limit
 #    image: quay.io/prometheus/prometheus:v2.0.0
     volumes:
      - ./monitor/prometheus.yml:/prometheus/prometheus.yml
@@ -17,8 +17,10 @@ services:
       resources:
         limits:
           cpus: '4.0'
-          memory: 190M
+          memory: 512M
     restart: always
+    networks:
+     - monitor
   exporter:
     image: prom/node-exporter:latest
     ports:
@@ -35,6 +37,8 @@ services:
     - ./grafana.env
     volumes:
     - /etc/localtime:/etc/localtime
+    networks:
+     - monitor
 #  alertmanager:
 #    image: prom/alertmanager
 #    volumes:
@@ -44,7 +48,6 @@ services:
 #    command:
 #      - -config.file=/etc/alertmanager/alertmanager.yml
   nginx:
-#     image: nginx:test-1
      image: siangyeh8818/nginx:influx-prom
      restart: always
      ports:
@@ -56,6 +59,8 @@ services:
      - ./nginx.env
      volumes:
      - /etc/localtime:/etc/localtime
+     networks:
+      - monitor
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
@@ -68,10 +73,22 @@ services:
     - /var/lib/docker/:/var/lib/docker:ro
     depends_on:
     - redis
+    networks:
+     - monitor
   redis:
     image: redis:latest
     container_name: redis
     ports:
     - 6379:6379
-
+    networks:
+     - monitor
+networks:
+    monitor:
+        driver: bridge
+        driver_opts:
+            com.docker.network.enable_ipv6: "true"
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.19.1.0/24
 
