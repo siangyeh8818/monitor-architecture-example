@@ -18,10 +18,13 @@ scrape_configs:
         - '{job="node-exporter-work4"}'
         - '{job="gateway"}'
         - '{job="docker-daemon"}'
+        - '{job="zookeeper"}'
+        - '{job="kafka"}'
     static_configs:
       - targets:
         - '172.17.0.1:31121'
         - '172.17.0.1:31119'
+        - '10.22.14.11:31124'
   - job_name: 'data-log-host'
     scrape_interval: 5s
     static_configs:
