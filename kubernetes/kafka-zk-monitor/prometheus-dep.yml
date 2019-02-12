@@ -1,0 +1,146 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-zk-kafka
+  namespace: monitor
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-zk-kafka
+    spec:
+      containers:
+      - name: prometheus-zk-kafka
+        image: prom/prometheus:v2.3.1
+        command:
+          - "prometheus"
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.retention=7d"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        resources:
+          requests:
+            memory: 512Mi
+          limits:
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: prometheus-config
+          subPath: prometheus.yml
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+            items:
+              - key: prometheus.yml
+                path: prometheus.yml
+                mode: 0644
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: zookeeper-exporter
+  namespace: monitor
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper-exporter
+    spec:
+      containers:
+      - name: zookeeper-exporter
+        image: carlpett/zookeeper_exporter:v1.0.2 
+        command:
+          - "/zookeeper_exporter"
+          - "-zookeeper"
+          - "zk-metrics-svc:2181"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9141
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: kafka-exporter
+  namespace: monitor
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-exporter
+    spec:
+      containers:
+      - name: kafka-exporter
+        image: danielqsj/kafka-exporter
+        args: ["--kafka.server=kafka-svc:9092"]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9308
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-monitor-nodeport
+  namespace: monitor
+  labels:
+    app: prometheus-monitor-nodeport
+spec:
+  type: NodePort
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: 9090
+      nodePort: 31124
+  selector:
+    app: prometheus-zk-kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-exporter
+  namespace: monitor
+  labels:
+    app: zookeeper-exporter
+spec:
+  ports:
+    - port: 9141
+      protocol: TCP
+      targetPort: 9141
+  selector:
+    app: zookeeper-exporter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-exporter
+  namespace: monitor
+  labels:
+    app: kafka-exporter
+spec:
+  ports:
+    - port: 9308
+      protocol: TCP
+      targetPort: 9308
+  selector:
+    app: kafka-exporter

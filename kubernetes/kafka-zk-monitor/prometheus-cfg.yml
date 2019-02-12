@@ -1,0 +1,53 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus-config
+  namespace: monitor
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval:     15s
+      evaluation_interval: 15s
+      external_labels:
+          monitor: 'zk-kafka-monitor'
+    rule_files:
+        - 'alert.rules.yml'
+    scrape_configs:
+      - job_name: 'zookeeper'
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['zk-svc']
+            port: 9141
+            type: A
+            refresh_interval: 5s
+      - job_name: 'kafka'
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['kafka-exporter']
+            port: 9308
+            type: A
+            refresh_interval: 5s
+      - job_name: 'kafka-0-jmx'
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['kafka-0.kafka-svc.monitor.svc.cluster.local']
+            port: 7072
+            type: A
+            refresh_interval: 10s
+      - job_name: 'kafka-1-jmx'
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['kafka-1.kafka-svc.monitor.svc.cluster.local']
+            port: 7072
+            type: A
+            refresh_interval: 10s
+      - job_name: 'kafka-2-jmx'
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['kafka-2.kafka-svc.monitor.svc.cluster.local']
+            port: 7072
+            type: A
+            refresh_interval: 10s
+---

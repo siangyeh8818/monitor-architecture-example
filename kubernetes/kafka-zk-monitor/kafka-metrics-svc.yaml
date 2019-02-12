@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ksfka-metrics-svc
+  namespace: monitor
+  labels:
+    app: kafka-metrics-svc
+spec:
+  ports:
+  - port: 7072
+  clusterIP: None
+  selector:
+    app: kafka
