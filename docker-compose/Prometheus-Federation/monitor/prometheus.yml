@@ -20,6 +20,9 @@ scrape_configs:
         - '{job="docker-daemon"}'
         - '{job="zookeeper"}'
         - '{job="kafka"}'
+        - '{job="kafka-0-jmx"}'
+        - '{job="kafka-1-jmx"}'
+        - '{job="kafka-2-jmx"}'
     static_configs:
       - targets:
         - '172.17.0.1:31121'
