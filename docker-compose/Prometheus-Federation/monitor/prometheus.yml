@@ -23,11 +23,13 @@ scrape_configs:
         - '{job="kafka-0-jmx"}'
         - '{job="kafka-1-jmx"}'
         - '{job="kafka-2-jmx"}'
+        - '{job="rook-ceph/rook-ceph-mgr/0"}'
     static_configs:
       - targets:
         - '172.17.0.1:31121'
         - '172.17.0.1:31119'
         - '10.22.14.11:31124'
+        - '10.22.14.11:30900'
   - job_name: 'data-log-host'
     scrape_interval: 5s
     static_configs:
@@ -37,4 +39,8 @@ scrape_configs:
     static_configs:
     - targets:
       - cadvisor:8080
-
+  - job_name: elasticsearch
+    scrape_interval: 5s
+    static_configs:
+    - targets:
+      - 172.17.0.1:9108
