@@ -18,7 +18,7 @@ data:
       - job_name: 'zookeeper'
         scrape_interval: 5s
         dns_sd_configs:
-          - names: ['zk-svc']
+          - names: ['zookeeper-exporter']
             port: 9141
             type: A
             refresh_interval: 5s
