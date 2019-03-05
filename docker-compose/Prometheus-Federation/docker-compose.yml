@@ -2,7 +2,6 @@ version: "3"
 services:
   prom:
     image: siangyeh8818/prometheus-docker:2.6-limit
-#    image: quay.io/prometheus/prometheus:v2.0.0
     volumes:
      - ./monitor/prometheus.yml:/prometheus/prometheus.yml
      - /etc/localtime:/etc/localtime
@@ -92,10 +91,12 @@ services:
   es-exporter:
     image: justwatch/elasticsearch_exporter:1.0.2
     command:
-     - '-es.uri=http://172.17.0.1:9200'
+     - '-es.uri=http://172.19.0.1:9200'
     restart: always
     ports:
     - "9108:9108"
+    networks:
+     - monitor
 networks:
     monitor:
         driver: bridge

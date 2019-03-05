@@ -23,13 +23,13 @@ scrape_configs:
         - '{job="kafka-0-jmx"}'
         - '{job="kafka-1-jmx"}'
         - '{job="kafka-2-jmx"}'
-        - '{job="rook-ceph/rook-ceph-mgr/0"}'
+        - '{job="ceph-exporter"}'
     static_configs:
       - targets:
         - '172.17.0.1:31121'
         - '172.17.0.1:31119'
-        - '10.22.14.11:31124'
-        - '10.22.14.11:30900'
+        - '172.17.0.1:31124'
+        - '172.17.0.1:31125'
   - job_name: 'data-log-host'
     scrape_interval: 5s
     static_configs:
