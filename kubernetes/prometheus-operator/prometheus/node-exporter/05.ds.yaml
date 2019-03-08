@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: prometheus
+spec:
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+      name: node-exporter
+    spec:
+      serviceAccountName: node-exporter
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - image: quay.io/prometheus/node-exporter:v0.17.0
+        args:
+        - "--web.listen-address=0.0.0.0:9100"
+        - "--path.procfs=/host/proc"
+        - "--path.sysfs=/host/sys"
+        - "--collector.processes"
+        name: node-exporter
+        resources:
+          requests:
+            memory: 30Mi
+            cpu: 100m
+          limits:
+            memory: 100Mi
+            cpu: 200m
+        volumeMounts:
+        - name: proc
+          readOnly:  true
+          mountPath: /host/proc
+        - name: sys
+          readOnly: true
+          mountPath: /host/sys
+      tolerations:
+        - effect: NoExecute
+          operator: Exists
+        - effect: NoSchedule
+          operator: Exists
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+

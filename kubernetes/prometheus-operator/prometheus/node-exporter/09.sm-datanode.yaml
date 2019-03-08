@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "node-exporter-datanode"
+  namespace: "prometheus"
+  labels:
+    k8s-app: "node-exporter-data-node"
+    stage: "all"
+    class: "system"
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      k8s-app: node-exporter-datanode
+  namespaceSelector:
+    matchNames:
+    - prometheus
+  endpoints:
+  - port: http
+    scheme: http
+    interval: 30s
+

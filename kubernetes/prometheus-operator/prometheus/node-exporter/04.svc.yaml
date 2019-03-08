@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: "node-exporter"
+    k8s-app: "node-exporter"
+    monitor: "on"
+    class: "system"
+  name: "node-exporter"
+  namespace: "prometheus"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http
+    port: 9100
+    protocol: TCP
+  selector:
+    app: node-exporter
+
