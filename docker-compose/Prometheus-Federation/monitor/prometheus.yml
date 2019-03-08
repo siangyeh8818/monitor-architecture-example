@@ -24,6 +24,8 @@ scrape_configs:
         - '{job="kafka-1-jmx"}'
         - '{job="kafka-2-jmx"}'
         - '{job="rook-ceph"}'
+        - '{job="rook"}'
+        - '{job="kube-state-metrics"}'
     static_configs:
       - targets:
         - '172.17.0.1:31121'
