@@ -57,3 +57,10 @@ data:
             port: 9100
             type: A
             refresh_interval: 10s
+      - job_name: "kube-state-metrics"
+        scrape_interval: 5s
+        dns_sd_configs:
+          - names: ['kube-state-metrics']
+            port: 8080
+            type: A
+            refresh_interval: 5s

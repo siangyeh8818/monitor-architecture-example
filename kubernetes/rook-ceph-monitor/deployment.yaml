@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ceph-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ceph-exporter
+      name: ceph-exporter
+    spec:
+      containers:
+      - name: ceph-exporter
+        image: digitalocean/ceph_exporter
+        imagePullPolicy: Always
+        commands:
+        - "/bin/ceph_exporter"
+        - "--ceph.config"
+        - "rook-ceph.config"
+        ports:
+        - name: http-metrics
+          containerPort: 9128
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: localtime
+          readOnly: true
+        - mountPath: /etc/ceph
+          name: ceph-cfg
+          readOnly: true
+      hostAliases:
+      - ip: "172.20.10.91"
+        hostnames:
+        - "node01"
+      - ip: "172.20.10.97"
+        hostnames:
+        - "node06"
+      - ip: "172.20.10.98"
+        hostnames:
+        - "node07"
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: ceph-cfg
+        hostPath:
+          path: /opt/rook/rook-ceph
