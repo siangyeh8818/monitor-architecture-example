@@ -1,7 +1,7 @@
 version: '3.1'
 services:
     zabbix-agent:
-       image: sinagyeh8818/zabbix-agent:v3
+       image: siangyeh8818/zabbix-agent:v3
 #       image: zabbix/zabbix-agent
        container_name: zabbix-agent
        network_mode: host
