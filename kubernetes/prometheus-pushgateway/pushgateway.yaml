@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: monitor 
+  name:  pushgateway
+  labels:
+    app:  pushgateway
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app:  pushgateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: "25%"
+      maxUnavailable: "25%"
+  template:
+    metadata:
+      name:  pushgateway
+      labels:
+        app:  pushgateway
+    spec:
+      containers:
+        - name:  pushgateway
+          image: prom/pushgateway:v0.7.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 600
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+            httpGet:
+              path: /
+              port: 9091
+          ports:
+            - name: "app-port"
+              containerPort: 9091
+          resources:
+            limits:
+              memory: "1000Mi"
+              cpu: 1
+            requests:
+              memory: "1000Mi"
+              cpu: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pushgateway
+  namespace: monitor
+  labels:
+    app: pushgateway
+spec:
+  selector:
+    app: pushgateway
+  ports:
+    - name: pushgateway
+      port: 9091
+      targetPort: 9091
